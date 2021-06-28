@@ -1,5 +1,7 @@
 package com.br.pedro.bruno.atmconsultoria;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -15,6 +17,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.br.pedro.bruno.atmconsultoria.databinding.ActivityMainBinding;
+
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               enviarEmail();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -41,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_principal,R.id.nav_servico,R.id.nav_clientes,R.id.nav_contato,R.id.nav_sobre
+                )
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -49,11 +55,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    private void enviarEmail() {
+
+        //Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:31986773153"));
+        //Intent intent = new Intent(Intent.ACTION_SENDTO,Uri.parse("smsto: 31986773153"));
+        //intent.putExtra(Intent.EXTRA_TEXT,"Essa mensagem foi enviada pelo meu app");
+        //intent.setPackage("com.whatsapp");
+
+        //Intent intent = new Intent(Intent.ACTION_SENDTO);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+       // intent.putExtra(Intent.EXTRA_EMAIL,new String[]{"atendimento@atmconsultoria.com.br"});
+        //intent.putExtra(Intent.EXTRA_SUBJECT,"Contato pelo app");
+        //intent.putExtra(Intent.EXTRA_TEXT,"Mensagem automática");
+        //intent.setType("message/rfc822");
+        String url = "https://api.whatsapp.com/send?phone=5531986773153"+"&text="+ URLEncoder.encode("Tenho uma proposta :)");
+        intent.setPackage("com.whatsapp");
+        intent.setData(Uri.parse(url));
+        startActivity(Intent.createChooser(intent,"Me contrate"));
     }
 
     @Override
